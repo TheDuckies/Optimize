@@ -40,7 +40,7 @@ namespace ConversionOptimizer
                            {
                                Convertable = false;
 
-                               if(Status != null && Status.Contains("On Hold:"))
+                               if(Status != null && Status.Contains("On Hold:") && !Status.Contains(ex))
                                {
                                    Status = Status + " " + ex;
                                }
