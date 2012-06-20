@@ -8,8 +8,3 @@ C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\obj\x86\Debug\ConversionOp
 C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\bin\Debug\ConversionOptimizer.exe
 C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\bin\Debug\ConversionOptimizer.pdb
 C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\obj\x86\Debug\ConversionOptimizer.csprojResolveAssemblyReference.cache
-C:\Projects\Optimize\ConversionOptimizer\obj\x86\Debug\ConversionOptimizer.exe
-C:\Projects\Optimize\ConversionOptimizer\obj\x86\Debug\ConversionOptimizer.pdb
-C:\Projects\Optimize\ConversionOptimizer\bin\Debug\ConversionOptimizer.exe
-C:\Projects\Optimize\ConversionOptimizer\bin\Debug\ConversionOptimizer.pdb
-C:\Projects\Optimize\ConversionOptimizer\obj\x86\Debug\ResolveAssemblyReference.cache

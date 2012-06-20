@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
+
 
 namespace ConversionOptimizer
 {
@@ -9,39 +14,40 @@ namespace ConversionOptimizer
     {
         private static List<Test> TestList;
         private static List<string> exceptionList;
+        private static Hashtable ExistingList;
 
         [STAThread]
         static void Main(string[] args)
         {
-            Directory.SetCurrentDirectory(@"C:\Projects\OptimizedSpreadsheets");
+            Directory.SetCurrentDirectory(@"C:\Projects\Optimize\");
 
-            OpenFileDialog readFile = FindFitNesseList();
+            OpenFileDialog ReadFile = FindFitNesseList();
 
             BuildExceptionList();
             
-            ReadSource(new StreamReader(readFile.OpenFile()));
+            ReadSource(new StreamReader(ReadFile.OpenFile()));
 
         }
 
         public static OpenFileDialog FindFitNesseList()
         {
-            OpenFileDialog readFile = new OpenFileDialog();
-            readFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            readFile.InitialDirectory = @"C:\Projects\Optimize\FitNesseList\";
-            readFile.Title = "Select a tab-delimited source file";
+            OpenFileDialog ReadFile = new OpenFileDialog();
+            ReadFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            ReadFile.InitialDirectory = @"C:\Projects\Optimize\FitNesseList\";
+            ReadFile.Title = "Select a tab-delimited source file";
 
-            DialogResult result = readFile.ShowDialog();
+            DialogResult result = ReadFile.ShowDialog();
 
             while (result != DialogResult.OK)
             {
                 if (result == DialogResult.Cancel || result == DialogResult.Abort)
                    Environment.Exit(0);
-                if (!readFile.CheckFileExists)
+                if (!ReadFile.CheckFileExists)
                     continue;
-                result = readFile.ShowDialog();
+                result = ReadFile.ShowDialog();
             }
 
-            return readFile;
+            return ReadFile;
         }
 
         public static void BuildExceptionList()
@@ -74,7 +80,10 @@ namespace ConversionOptimizer
          */
         public static void ReadSource(StreamReader source)
         {
-            
+
+            StreamWriter outputFile = new StreamWriter("OUTPUT.TXT");
+            StreamWriter spreadsheetoutput = new StreamWriter("Spreadsheet.TSV");
+            spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
             TestList = new List<Test>();
 
             using (TextReader reader = source)
@@ -96,19 +105,16 @@ namespace ConversionOptimizer
 
                     count++;
                 }
-                
-                TestList.Sort();
-
-                string fileName = TestList[0].FitnessePath.Split('.')[0];
-
-                StreamWriter outputFile = new StreamWriter(fileName + ".TXT");
-                StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".TSV");
-
                 outputFile.WriteLine("Total number of Tests: " + count);
-                spreadsheetoutput.WriteLine("Total number of Tests: " + count);
 
-                outputFile.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
-                spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
+                try
+                {
+
+                    TestList.Sort();
+                }
+                catch (Exception e)
+                {
+                }
 
                 foreach (Test test in TestList)
                 {
@@ -119,7 +125,6 @@ namespace ConversionOptimizer
                 spreadsheetoutput.Close();
             }
         }
-
 
     }
 }

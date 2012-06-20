@@ -1,1 +1,0 @@
-TortoiseProc.exe /command:update /path:"c:\Projects\FitNesseRoot" /closeonend:1
