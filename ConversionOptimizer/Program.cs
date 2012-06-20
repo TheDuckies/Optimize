@@ -13,7 +13,7 @@ namespace ConversionOptimizer
         [STAThread]
         static void Main(string[] args)
         {
-            Directory.SetCurrentDirectory(@"C:\Projects\Optimize\OptimizedSpreadsheets\");
+            Directory.SetCurrentDirectory(@"C:\Projects\OptimizedSpreadsheets");
 
             OpenFileDialog readFile = FindFitNesseList();
 
@@ -83,41 +83,39 @@ namespace ConversionOptimizer
                 int count = 0;
                 while( (line = reader.ReadLine()) != null)
                 {
-                    if (line.Contains("Total number of Tests:") || line.Contains("Path	Lines	Status"))
-                        continue;
-
                     char[] toRemove = {'\t'};
                     
                     string[] testline = line.Split(toRemove, StringSplitOptions.RemoveEmptyEntries);
 
                     Test newTest = new Test(testline[0], exceptionList);
 
-                    if (newTest.Status == null)
-                        if(testline[1].Equals(newTest.NumLines.ToString()))
-                            newTest.Status = testline[2];
-                        else
-                            newTest.Status = testline[1];
-
+                    if(newTest.Status == null)
+                        newTest.Status = testline[1];
                     newTest.FitnessePath = testline[0];
                     TestList.Add(newTest);
 
                     count++;
                 }
-                reader.Close();
-
+                
                 TestList.Sort();
 
                 string fileName = TestList[0].FitnessePath.Split('.')[0];
 
+                StreamWriter outputFile = new StreamWriter(fileName + ".TXT");
                 StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".TSV");
 
+                outputFile.WriteLine("Total number of Tests: " + count);
                 spreadsheetoutput.WriteLine("Total number of Tests: " + count);
 
+                outputFile.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
                 spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
 
                 foreach (Test test in TestList)
+                {
+                   outputFile.WriteLine("Test Path: " + test.FullPath + '\t' + "Line Count: " + test.NumLines + '\t' + "Status: " + test.Status);
                    spreadsheetoutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t' + test.Status);
-
+                }
+                outputFile.Close();
                 spreadsheetoutput.Close();
             }
         }
