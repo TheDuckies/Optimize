@@ -1,0 +1,10 @@
+C:\Users\DevonB\documents\visual studio 2010\Projects\ConversionOptimizer\ConversionOptimizer\bin\Release\ConversionOptimizer.exe
+C:\Users\DevonB\documents\visual studio 2010\Projects\ConversionOptimizer\ConversionOptimizer\bin\Release\ConversionOptimizer.pdb
+C:\Users\DevonB\documents\visual studio 2010\Projects\ConversionOptimizer\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.exe
+C:\Users\DevonB\documents\visual studio 2010\Projects\ConversionOptimizer\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.pdb
+C:\Users\DevonB\documents\visual studio 2010\Projects\ConversionOptimizer\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.csprojResolveAssemblyReference.cache
+C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.exe
+C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.pdb
+C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\bin\Release\ConversionOptimizer.exe
+C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\bin\Release\ConversionOptimizer.pdb
+C:\Projects\Optimize\Git\Optimize\ConversionOptimizer\obj\x86\Release\ConversionOptimizer.csprojResolveAssemblyReference.cache
