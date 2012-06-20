@@ -44,6 +44,11 @@ local.properties
 # Build results
 [Dd]ebug/
 [Rr]elease/
+ExceptionsList/
+FitNesseList/
+OptimizedSpreadsheets/
+ConversionOptimizer/bin/
+ConversionOptimizer/obj/
 *_i.c
 *_p.c
 *.ilk
