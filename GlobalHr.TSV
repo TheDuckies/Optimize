@@ -1,0 +1,59 @@
+Total number of Tests: 57
+Path	Lines	Status
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestChngDedLinkRespSmc	29	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestChngEarnLinkRespSmc	29	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestManagerAccessToGlobalEmployeeBenefits	30	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteErrorMessages.TestMultiHireEe	36	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestEarnDedLinksShowServerError	38	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestTicdEs	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestCanTicdFr	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestTicdEn	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestCanTicdEs	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestTicdFr	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestCanTicdEn	52	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTicdLink.TestHideTransferEmployeeForGlobal	55	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteErrorMessages.TestNoAvailableComp	60	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteErrorMessages.TestTerminatedEe	61	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteEmpNoTimeclock.TestDuplicateEmpnoWithinCompany	62	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteErrorMessages.TestNoErrors	62	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteEmpNoTimeclock.TestDuplicateEmpnoTimeclock1	64	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteEmpNoTimeclock.TestDuplicateEmpnoAcrossCompanies	68	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuitePersonal.TestAddressState	73	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteJobsPage.TestDefaultValues2	78	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteEmpNoTimeclock.TestDuplicateEmpnoTimeclock2	79	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.ChangeJob	80	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.ChangeJobAndSalary	83	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteJobsPage.TestDefaultValues1	89	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.TestPtoPlans	90	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteDatesPage.TestPageUiEn	90	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.TestStartPageUi	96	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.TestStartPageUiFr	96	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.TestStartPageUiEs	96	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuitePersonal.TestPageReset	110	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestHcsoMyTeamHcsoDateNotRequired	112	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuitePersonal.TestPageNavigation	114	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteDatesPage.TestPageUiEs	115	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteDatesPage.TestPageUiFr	115	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteEmpNoTimeclock.TestEmpnoMethods	118	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestHcsoMyTeamHcsoEndDate	122	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteJobsPage.TestCodeFilteringRolesBased	123	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuitePersonal.TestPersonalGui	132	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteJobsPage.TestCodeFilteringCompanyBased	144	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.CoTransfer	148	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestHcsoMyTeamHcsoCheckBoxAndDateFields	159	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestHcsoMyTeamCanadaAndUsaUser	162	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.ReHire	228	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFiltersJobHistoryPage	248	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFiltersCanUsa	255	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.NewHire	256	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.TestMaritalStatusChange	322	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFiltersTest	414	Not Started
+GlobalHr.SuiteGuiTests.SuiteMssTests.TestTerminationIsAutoPaidFlag	766	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTransferSave.TestRequiredFieldsSave02	2420	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTransferSave.TestRequiredFieldsSave01	2422	Not Started
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTransferSave.TestAllFieldsSave	5219	Not Started
+GlobalHr.SuiteGuiTests.SuiteOtherTests.ErrorDoesNotExposeStacktTrace	-1	Test Directory Not Found
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CodeFilterJobChangeSuite.NewHireWithLargeList	213	On Hold: LARGE LIST
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SummaryPage.CheckAllFields	283	On Hold: SUPSUPERVISOR
+GlobalHr.SuiteGuiTests.SuiteHrTests.TransferTests.SuiteTransferPositionMgmt.TestTransferSave01	930	On Hold: POSFINDER
+GlobalHr.SuiteGuiTests.SuiteOtherTests.CanSuppressSin	328	Waiting for Review
