@@ -20,7 +20,7 @@ namespace ConversionOptimizer
             BuildExceptionList();
             
             ReadSource(new StreamReader(readFile.OpenFile()));
-
+            //This is a test of GitHub.
         }
 
         public static OpenFileDialog FindFitNesseList()
