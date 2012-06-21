@@ -68,6 +68,7 @@ ConversionOptimizer/obj/
 .builds
 *.dotCover
 *.dat
+*.exe
 
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
 #packages/
