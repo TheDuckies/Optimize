@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace ConversionOptimizer
 {
     class Program
     {
-        private static List<Test> TestList;
-        private static List<string> exceptionList;
+        public static Dictionary<string, Test> TestList;
+        public static List<string> exceptionList, MacroList;
 
         [STAThread]
         static void Main(string[] args)
@@ -20,7 +21,6 @@ namespace ConversionOptimizer
             BuildExceptionList();
             
             ReadSource(new StreamReader(readFile.OpenFile()));
-            //This is a test of GitHub.
         }
 
         public static OpenFileDialog FindFitNesseList()
@@ -75,12 +75,12 @@ namespace ConversionOptimizer
         public static void ReadSource(StreamReader source)
         {
             
-            TestList = new List<Test>();
+            TestList = new Dictionary<string, Test>();
+            MacroList = new List<string>();
 
             using (TextReader reader = source)
             {
                 string line;
-                int count = 0;
                 while( (line = reader.ReadLine()) != null)
                 {
                     if (line.Contains("Total number of Tests:") || line.Contains("Path	Lines	Status"))
@@ -99,29 +99,35 @@ namespace ConversionOptimizer
                             newTest.Status = testline[1];
 
                     newTest.FitnessePath = testline[0];
-                    TestList.Add(newTest);
-
-                    count++;
+                    TestList.Add(newTest.FitnessePath, newTest);
                 }
                 reader.Close();
 
-                TestList.Sort();
+               List<Test> sortedTests = new List<Test>(TestList.Values);
 
-                string fileName = TestList[0].FitnessePath.Split('.')[0];
+                sortedTests.Sort();
+
+                string fileName = sortedTests[0].FitnessePath.Split('.')[0];
 
                 StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".TSV");
 
-                spreadsheetoutput.WriteLine("Total number of Tests: " + count);
+                spreadsheetoutput.WriteLine("Total number of Tests: " + TestList.Count);
 
                 spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
 
-                foreach (Test test in TestList)
-                   spreadsheetoutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t' + test.Status);
-
+                foreach (Test test in sortedTests)
+                    spreadsheetoutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t' + test.Status);
                 spreadsheetoutput.Close();
+
+                StreamWriter macroutput = new StreamWriter(fileName + "MACROS.TSV");
+
+                foreach (string s in MacroList)
+                {
+                    macroutput.WriteLine(s);
+                }
+
+                macroutput.Close();
             }
         }
-
-
     }
 }

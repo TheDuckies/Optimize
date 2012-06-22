@@ -31,9 +31,30 @@ namespace ConversionOptimizer
                {
                    NumLines++;
 
-                   string currLine = testFile.ReadLine().ToUpper();
+                   string currLine = testFile.ReadLine();
+
+                   if (currLine.Contains("!include"))
+                   {
+                       const string root = @"C:\Projects\FitNesseRoot\";
+                       char[] splitter = {' '};
+                       string[] macroDetected = currLine.Split(splitter);
+
+                       foreach (string s in macroDetected)
+                       {
+                           if(s.ToUpper().Equals("-C") || s.ToUpper().Equals("!INCLUDE"))
+                               continue;
+
+                           string macro = root + s.Replace('.', '\\');
+                           if(Program.MacroList.Contains(macro))
+                               continue;
+                           Program.MacroList.Add(macro);
+                       }
+                   }
 
                    if (exceptions != null)
+                   {
+                       currLine = currLine.ToUpper();
+
                        foreach (string ex in exceptions)
                        {
                            if (currLine.Contains(ex))
@@ -50,6 +71,7 @@ namespace ConversionOptimizer
                                }
                            }
                        }
+                   }
                }
             }
             catch (FileNotFoundException e)
