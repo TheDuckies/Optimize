@@ -100,27 +100,34 @@ namespace ConversionOptimizer
                 string[] macroDetected = currLine.Split(splitter);
                 */
 
-                Regex.Replace(currLine, macropattern, "");
+                string regexReplacePattern = @"\|(.+)\|";
+                string regextMatchPattern = @"(\.[\w]+)+";
 
-                currLine.Trim();
+                Regex remove = new Regex(regexReplacePattern);
+                Regex match = new Regex(regextMatchPattern);
 
+                currLine = remove.Replace(currLine, "");
+
+                Match macroMatch = match.Match(currLine);
+
+                string macro = macroMatch.ToString();
                    
-                string macro = root + currLine.Replace('.', '\\');
+                string macroPath = root + macro.Replace('.', '\\');
 
-                if (Program.MacroList.ContainsKey(currLine))
+                if (Program.MacroList.ContainsKey(macroPath))
                     return;
-                if(Program.TestList.ContainsKey(currLine))
+                if (Program.TestList.ContainsKey(macroPath))
                 {
                     Test output;
-                    Program.TestList.TryGetValue(currLine, out output);
+                    Program.TestList.TryGetValue(macroPath, out output);
 
-                    Program.TestList.Remove(currLine);
+                    Program.TestList.Remove(macroPath);
 
                     output.Status = "Macro";
 
-                    Program.MacroList.Add(currLine, output);
+                    Program.MacroList.Add(macroPath, output);
                 }
-                Program.MacroList.Add(currLine, new Test(currLine, null, "Macro"));
+                Program.MacroList.Add(macroPath, new Test(macro, null, "Macro"));
             }
         }
         
