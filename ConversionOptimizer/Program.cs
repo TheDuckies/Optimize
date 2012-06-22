@@ -8,8 +8,8 @@ namespace ConversionOptimizer
 {
     class Program
     {
-        public static Dictionary<string, Test> TestList;
-        public static List<string> exceptionList, MacroList;
+        public static Dictionary<string, Test> TestList, MacroList;
+        public static List<string> exceptionList;
 
         [STAThread]
         static void Main(string[] args)
@@ -76,7 +76,7 @@ namespace ConversionOptimizer
         {
             
             TestList = new Dictionary<string, Test>();
-            MacroList = new List<string>();
+            MacroList = new Dictionary<string, Test>();
 
             using (TextReader reader = source)
             {
@@ -90,7 +90,7 @@ namespace ConversionOptimizer
                     
                     string[] testline = line.Split(toRemove, StringSplitOptions.RemoveEmptyEntries);
 
-                    Test newTest = new Test(testline[0], exceptionList);
+                    Test newTest = new Test(testline[0], exceptionList, null);
 
                     if (newTest.Status == null)
                         if(testline[1].Equals(newTest.NumLines.ToString()))
@@ -99,11 +99,15 @@ namespace ConversionOptimizer
                             newTest.Status = testline[1];
 
                     newTest.FitnessePath = testline[0];
-                    TestList.Add(newTest.FitnessePath, newTest);
+                    if(newTest.Status.Equals("Macro"))
+                        MacroList.Add(newTest.FitnessePath, newTest);
+                    else
+                        TestList.Add(newTest.FitnessePath, newTest);
                 }
                 reader.Close();
 
                List<Test> sortedTests = new List<Test>(TestList.Values);
+                List<Test> sortedMacros = new List<Test>(MacroList.Values);
 
                 sortedTests.Sort();
 
@@ -121,9 +125,9 @@ namespace ConversionOptimizer
 
                 StreamWriter macroutput = new StreamWriter(fileName + "MACROS.TSV");
 
-                foreach (string s in MacroList)
+                foreach (Test test in sortedMacros)
                 {
-                    macroutput.WriteLine(s);
+                    macroutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t');
                 }
 
                 macroutput.Close();

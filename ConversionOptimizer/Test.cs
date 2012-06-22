@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ConversionOptimizer
 {
@@ -13,10 +14,13 @@ namespace ConversionOptimizer
         public int NumLines;
         public string Status;
 
-        public Test(string path, List<string> exceptions)
+        public Test(string path, List<string> exceptions, string inputStatus)
         {
             //Get Full Path and add context.txt
             FullPath = @"C:\Projects\FitNesseRoot\" + path.Replace('.', '\\') + @"\content.txt";
+
+            if(inputStatus != null)
+                Status = inputStatus;
 
             //Count number of lines
             NumLines = 0;
@@ -33,45 +37,9 @@ namespace ConversionOptimizer
 
                    string currLine = testFile.ReadLine();
 
-                   if (currLine.Contains("!include"))
-                   {
-                       const string root = @"C:\Projects\FitNesseRoot\";
-                       char[] splitter = {' '};
-                       string[] macroDetected = currLine.Split(splitter);
+                   MacroDetector(currLine);
 
-                       foreach (string s in macroDetected)
-                       {
-                           if(s.ToUpper().Equals("-C") || s.ToUpper().Equals("!INCLUDE"))
-                               continue;
-
-                           string macro = root + s.Replace('.', '\\');
-                           if(Program.MacroList.Contains(macro))
-                               continue;
-                           Program.MacroList.Add(macro);
-                       }
-                   }
-
-                   if (exceptions != null)
-                   {
-                       currLine = currLine.ToUpper();
-
-                       foreach (string ex in exceptions)
-                       {
-                           if (currLine.Contains(ex))
-                           {
-                               Convertable = false;
-
-                               if(Status != null && Status.Contains("On Hold:") && !Status.Contains(ex))
-                               {
-                                   Status = Status + " " + ex;
-                               }
-                               else
-                               {
-                                   Status = "On Hold: " + ex;
-                               }
-                           }
-                       }
-                   }
+                  ExceptionDetector(currLine, exceptions);
                }
             }
             catch (FileNotFoundException e)
@@ -95,6 +63,70 @@ namespace ConversionOptimizer
 
         }
 
+        #region Object Creation Helper Methods
+
+        private void ExceptionDetector(string currLine, List<string> exceptions)
+        {
+            if (exceptions != null)
+            {
+                currLine = currLine.ToUpper();
+
+                foreach (string ex in exceptions)
+                {
+                    if (currLine.Contains(ex))
+                    {
+                        Convertable = false;
+
+                        if (Status != null && Status.Contains("On Hold:") && !Status.Contains(ex))
+                        {
+                            Status = Status + " " + ex;
+                        }
+                        else
+                        {
+                            Status = "On Hold: " + ex;
+                        }
+                    }
+                }
+            }
+        }
+        
+        private void MacroDetector(string currLine)
+        {
+            if (currLine.Contains("!include"))
+            {
+                const string root = @"C:\Projects\FitNesseRoot";
+               /*
+                char[] splitter = { ' ' };
+                string[] macroDetected = currLine.Split(splitter);
+                */
+
+                Regex.Replace(currLine, macropattern, "");
+
+                currLine.Trim();
+
+                   
+                string macro = root + currLine.Replace('.', '\\');
+
+                if (Program.MacroList.ContainsKey(currLine))
+                    return;
+                if(Program.TestList.ContainsKey(currLine))
+                {
+                    Test output;
+                    Program.TestList.TryGetValue(currLine, out output);
+
+                    Program.TestList.Remove(currLine);
+
+                    output.Status = "Macro";
+
+                    Program.MacroList.Add(currLine, output);
+                }
+                Program.MacroList.Add(currLine, new Test(currLine, null, "Macro"));
+            }
+        }
+        
+        #endregion
+
+
         #region IComparable<Test> Members
 
         public int CompareTo(Test other)
@@ -109,7 +141,7 @@ namespace ConversionOptimizer
 
         
 
-        public int statusCompare()
+        private int statusCompare()
         {
             switch (Status)
             {
@@ -123,6 +155,8 @@ namespace ConversionOptimizer
                     return 4;
                 case "Finished":
                     return 5;
+                case "Macro":
+                    return 6;
                 default:
                     return 3;
             }
