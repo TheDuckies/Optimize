@@ -34,16 +34,16 @@ namespace ConversionOptimizer
             {
                 testFile = new StreamReader(FullPath);
 
-               while(testFile.Peek() != -1)
-               {
-                   NumLines++;
+                while (testFile.Peek() != -1)
+                {
+                    NumLines++;
 
-                   string currLine = testFile.ReadLine();
+                    string currLine = testFile.ReadLine();
 
-                   MacroDetector(currLine);
+                    MacroDetector(currLine);
 
-                  ExceptionDetector(currLine, exceptions);
-               }
+                    ExceptionDetector(currLine, exceptions);
+                }
             }
             catch (FileNotFoundException e)
             {
@@ -92,64 +92,47 @@ namespace ConversionOptimizer
                 }
             }
         }
-        
+
         private void MacroDetector(string currLine)
         {
             if (currLine.Contains("!include"))
             {
                 const string root = @"C:\Projects\FitNesseRoot\";
-               /*
-                char[] splitter = { ' ' };
-                string[] macroDetected = currLine.Split(splitter);
-                */
+                /*
+                 char[] splitter = { ' ' };
+                 string[] macroDetected = currLine.Split(splitter);
+                 */
 
-<<<<<<< HEAD
                 currLine = Regex.Match(currLine, @"([\w]+[\.]+)+(\w)+").ToString();
-=======
-                string regexReplacePattern = @"\|(.+)\|";
-                string regextMatchPattern = @"(\.[\w]+)+";
->>>>>>> 3106d3aa5e58cfd335ab3729c0ad2035775287f0
 
-                Regex remove = new Regex(regexReplacePattern);
-                Regex match = new Regex(regextMatchPattern);
+                currLine.Trim();
 
-                currLine = remove.Replace(currLine, "");
 
-                Match macroMatch = match.Match(currLine);
+                string macro = root + currLine.Replace('.', '\\');
 
-                string macro = macroMatch.ToString();
-                   
-                string macroPath = root + macro.Replace('.', '\\');
-
-                if (Program.MacroList.ContainsKey(macroPath))
+                if (Program.MacroList.ContainsKey(currLine))
                     return;
-                if (Program.TestList.ContainsKey(macroPath))
+                if (Program.TestList.ContainsKey(currLine))
                 {
                     Test output;
-                    Program.TestList.TryGetValue(macroPath, out output);
+                    Program.TestList.TryGetValue(currLine, out output);
 
-                    Program.TestList.Remove(macroPath);
+                    Program.TestList.Remove(currLine);
 
                     output.Status = "Macro";
 
-<<<<<<< HEAD
                     Program.MacroList.Add(currLine, output);
                     return;
                 }
 
                 Test newmacro = new Test(currLine, null, "Macro");
-                
+
                 NumLines += newmacro.NumLines;
 
                 Program.MacroList.Add(currLine, newmacro);
-=======
-                    Program.MacroList.Add(macroPath, output);
-                }
-                Program.MacroList.Add(macroPath, new Test(macro, null, "Macro"));
->>>>>>> 3106d3aa5e58cfd335ab3729c0ad2035775287f0
             }
         }
-        
+
         #endregion
 
 
@@ -165,7 +148,7 @@ namespace ConversionOptimizer
             }
         }
 
-        
+
 
         private int statusCompare()
         {
