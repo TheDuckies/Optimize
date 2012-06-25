@@ -84,11 +84,7 @@ namespace ConversionOptimizer
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-<<<<<<< HEAD
-                    if (line.Contains("Total number of Tests:") || line.Contains("Path	Lines	Status"))
-=======
                     if (line.Contains("Total number of") || line.Contains("Path	Lines	Status") || line.Equals(""))
->>>>>>> 40e2c6c393302803065feba7303203cc0605e114
                         continue;
 
                     char[] toRemove = {'\t'};
@@ -103,17 +99,12 @@ namespace ConversionOptimizer
                         else
                             newTest.Status = testline[1];
 
-<<<<<<< HEAD
                     newTest.FitnessePath = testline[0];
-                    if(newTest.Status.Equals("Macro"))
-                        MacroList.Add(newTest.FitnessePath, newTest);
-                    else if (!MacroList.ContainsKey(newTest.FitnessePath))
-=======
                     if (newTest.Status.Equals("Macro"))
                         MacroList.Add(newTest.FitnessePath, newTest);
                     else if (!TestList.ContainsKey(newTest.FitnessePath))
->>>>>>> 40e2c6c393302803065feba7303203cc0605e114
                         TestList.Add(newTest.FitnessePath, newTest);
+
                 }
                 reader.Close();
 
