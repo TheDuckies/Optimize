@@ -111,7 +111,12 @@ namespace ConversionOptimizer
                 string macro = root + currLine.Replace('.', '\\');
 
                 if (Program.MacroList.ContainsKey(currLine))
+                {
+                    Test output;
+                    Program.MacroList.TryGetValue(currLine, out output);
+                    NumLines += output.NumLines;
                     return;
+                }
                 if (Program.TestList.ContainsKey(currLine))
                 {
                     Test output;
