@@ -6,20 +6,20 @@ using System.Collections;
 
 namespace ConversionOptimizer
 {
-    class Program
+    internal class Program
     {
         public static Dictionary<string, Test> TestList, MacroList;
         public static List<string> exceptionList;
 
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Directory.SetCurrentDirectory(@"C:\Projects\Optimize\OptimizedSpreadsheets\");
 
             OpenFileDialog readFile = FindFitNesseList();
 
             BuildExceptionList();
-            
+
             ReadSource(new StreamReader(readFile.OpenFile()));
         }
 
@@ -35,7 +35,7 @@ namespace ConversionOptimizer
             while (result != DialogResult.OK)
             {
                 if (result == DialogResult.Cancel || result == DialogResult.Abort)
-                   Environment.Exit(0);
+                    Environment.Exit(0);
                 if (!readFile.CheckFileExists)
                     continue;
                 result = readFile.ShowDialog();
@@ -72,41 +72,44 @@ namespace ConversionOptimizer
          * TODO
          * 
          */
+
         public static void ReadSource(StreamReader source)
         {
-            
+
             TestList = new Dictionary<string, Test>();
             MacroList = new Dictionary<string, Test>();
 
             using (TextReader reader = source)
             {
                 string line;
-                while( (line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.Contains("Total number of Tests:") || line.Contains("Path	Lines	Status") || line.Equals(""))
+                    if (line.Contains("Total number of") || line.Contains("Path	Lines	Status") || line.Equals(""))
                         continue;
 
                     char[] toRemove = {'\t'};
-                    
+
                     string[] testline = line.Split(toRemove, StringSplitOptions.RemoveEmptyEntries);
 
                     Test newTest = new Test(testline[0], exceptionList, null);
 
                     if (newTest.Status == null)
-                        if(testline[1].Equals(newTest.NumLines.ToString()))
+                        if (testline[1].Equals(newTest.NumLines.ToString()))
                             newTest.Status = testline[2];
                         else
                             newTest.Status = testline[1];
 
-                    if(newTest.Status.Equals("Macro"))
+                    if (newTest.Status.Equals("Macro"))
                         MacroList.Add(newTest.FitnessePath, newTest);
-                    else if(!TestList.ContainsKey(newTest.FitnessePath))
+                    else if (!TestList.ContainsKey(newTest.FitnessePath))
                         TestList.Add(newTest.FitnessePath, newTest);
                 }
                 reader.Close();
 
-               List<Test> sortedTests = new List<Test>(TestList.Values);
+                List<Test> sortedTests = new List<Test>(TestList.Values);
                 List<Test> sortedMacros = new List<Test>(MacroList.Values);
+
+                Metrics suiteMetrics = new Metrics(TestList.Count, MacroList.Count);
 
                 sortedTests.Sort();
 
@@ -114,7 +117,18 @@ namespace ConversionOptimizer
 
                 StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".TSV");
 
-                spreadsheetoutput.WriteLine("Total number of Tests: " + TestList.Count);
+                string[] statii = {"Not Started", "In Progress", "On Hold", "Waiting for Review", "Finished"};
+
+                countStatus(TestList.Values, statii);
+
+                spreadsheetoutput.WriteLine("Total number of Tests: " + Metrics.totalTests);
+                spreadsheetoutput.WriteLine("Total number of Macros: " + Metrics.totalMacros);
+                spreadsheetoutput.WriteLine("Total number of Tests not started: " + Metrics.notStarted);
+                spreadsheetoutput.WriteLine("Total number of Tests in progress: " + Metrics.inProgress);
+                spreadsheetoutput.WriteLine("Total number of Tests on hold (generic): " + Metrics.onHold);
+                spreadsheetoutput.WriteLine("Total number of Tests on hold (exception list generated): " + Metrics.onHoldException);
+                spreadsheetoutput.WriteLine("Total number of Tests waiting for review: " + Metrics.waitingForReview);
+                spreadsheetoutput.WriteLine("Total number of Tests finished: " + Metrics.finished);
 
                 spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
 
@@ -131,6 +145,33 @@ namespace ConversionOptimizer
 
                 macroutput.Close();
             }
+
+        }
+
+        private static void countStatus (Dictionary<string, Test>.ValueCollection valueCollection, string[] statii)
+        {
+            foreach (Test test in valueCollection)
+            {
+                switch(test.Status)
+                {
+                    case "Not Started":
+                        Metrics.notStarted++;
+                        break;
+                    case "On Hold":
+                        Metrics.onHold++;
+                        break;
+                    case "Waiting for Review":
+                        Metrics.waitingForReview++;
+                        break;
+                    case "Finished":
+                        Metrics.finished++;
+                        break;
+                    default:
+                        Metrics.onHoldException++;
+                        break;
+                }
+            }
+
         }
     }
 }
