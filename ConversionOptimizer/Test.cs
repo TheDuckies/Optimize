@@ -19,7 +19,10 @@ namespace ConversionOptimizer
             //Get Full Path and add context.txt
             FullPath = @"C:\Projects\FitNesseRoot\" + path.Replace('.', '\\') + @"\content.txt";
 
-            if(inputStatus != null)
+            Convertable = true;
+            FitnessePath = path;
+
+            if (inputStatus != null)
                 Status = inputStatus;
 
             //Count number of lines
@@ -94,13 +97,13 @@ namespace ConversionOptimizer
         {
             if (currLine.Contains("!include"))
             {
-                const string root = @"C:\Projects\FitNesseRoot";
+                const string root = @"C:\Projects\FitNesseRoot\";
                /*
                 char[] splitter = { ' ' };
                 string[] macroDetected = currLine.Split(splitter);
                 */
 
-                Regex.Replace(currLine, macropattern, "");
+                currLine = Regex.Match(currLine, @"([\w]+[\.]+)+(\w)+").ToString();
 
                 currLine.Trim();
 
@@ -119,8 +122,14 @@ namespace ConversionOptimizer
                     output.Status = "Macro";
 
                     Program.MacroList.Add(currLine, output);
+                    return;
                 }
-                Program.MacroList.Add(currLine, new Test(currLine, null, "Macro"));
+
+                Test newmacro = new Test(currLine, null, "Macro");
+                
+                NumLines += newmacro.NumLines;
+
+                Program.MacroList.Add(currLine, newmacro);
             }
         }
         
