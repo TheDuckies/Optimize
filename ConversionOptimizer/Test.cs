@@ -36,13 +36,19 @@ namespace ConversionOptimizer
 
                 while (testFile.Peek() != -1)
                 {
-                    NumLines++;
-
                     string currLine = testFile.ReadLine();
+
+<<<<<<< HEAD
+                    if (currLine.StartsWith("|"))
+=======
+//                    if (currLine.StartsWith("|")) 
+>>>>>>> 9661e0d76a39d8f8a41620a63cbe5a73b1cf7a74
+                        NumLines++;
 
                     MacroDetector(currLine);
 
-                    ExceptionDetector(currLine, exceptions);
+                    if(!Status.Equals("Finished") && !Status.Equals("Waiting for Review"))
+                        ExceptionDetector(currLine, exceptions);
                 }
             }
             catch (FileNotFoundException e)

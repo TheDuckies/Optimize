@@ -91,7 +91,7 @@ namespace ConversionOptimizer
 
                     string[] testline = line.Split(toRemove, StringSplitOptions.RemoveEmptyEntries);
 
-                    Test newTest = new Test(testline[0], exceptionList, null);
+                    Test newTest = new Test(testline[0], exceptionList, testline[testline.Length -1]);
 
                     if (newTest.Status == null)
                         if (testline[1].Equals(newTest.NumLines.ToString()))
@@ -102,7 +102,7 @@ namespace ConversionOptimizer
                     newTest.FitnessePath = testline[0];
                     if (newTest.Status.Equals("Macro"))
                         MacroList.Add(newTest.FitnessePath, newTest);
-                    else if (!TestList.ContainsKey(newTest.FitnessePath))
+                    else if (!MacroList.ContainsKey(newTest.FitnessePath))
                         TestList.Add(newTest.FitnessePath, newTest);
 
                 }
@@ -129,8 +129,10 @@ namespace ConversionOptimizer
                 spreadsheetoutput.WriteLine("Total number of Tests in progress: " + Metrics.inProgress);
                 spreadsheetoutput.WriteLine("Total number of Tests on hold (generic): " + Metrics.onHold);
                 spreadsheetoutput.WriteLine("Total number of Tests on hold (exception list generated): " + Metrics.onHoldException);
+                spreadsheetoutput.WriteLine("Total number of Tests on hold (inclusive) (as a percentage): " + ((float)(Metrics.onHold+Metrics.onHoldException) / (float)Metrics.totalTests) + @"%");
                 spreadsheetoutput.WriteLine("Total number of Tests waiting for review: " + Metrics.waitingForReview);
                 spreadsheetoutput.WriteLine("Total number of Tests finished: " + Metrics.finished);
+                spreadsheetoutput.WriteLine("Total number of Tests finished (as a percentage): " + ((float)Metrics.finished/(float)Metrics.totalTests) + @"%");
 
                 spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
 
