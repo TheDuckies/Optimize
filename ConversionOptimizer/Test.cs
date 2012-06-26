@@ -38,11 +38,7 @@ namespace ConversionOptimizer
                 {
                     string currLine = testFile.ReadLine();
 
-<<<<<<< HEAD
                     if (currLine.StartsWith("|"))
-=======
-//                    if (currLine.StartsWith("|")) 
->>>>>>> 9661e0d76a39d8f8a41620a63cbe5a73b1cf7a74
                         NumLines++;
 
                     MacroDetector(currLine);
