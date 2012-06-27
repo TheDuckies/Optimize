@@ -140,7 +140,7 @@ namespace ConversionOptimizer
                     spreadsheetoutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t' + test.Status);
                 spreadsheetoutput.Close();
 
-                StreamWriter macroutput = new StreamWriter(fileName + "MACROS.TSV");
+                StreamWriter macroutput = new StreamWriter(fileName + "MACROS.TSV", false);
 
                 foreach (Test test in sortedMacros)
                 {

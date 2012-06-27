@@ -41,7 +41,8 @@ namespace ConversionOptimizer
                     if (currLine.StartsWith("|"))
                         NumLines++;
 
-                    MacroDetector(currLine);
+                    if (currLine.Contains("!include"))
+                        MacroDetector(currLine);
 
                     if(!Status.Equals("Finished") && !Status.Equals("Waiting for Review"))
                         ExceptionDetector(currLine, exceptions);
@@ -97,20 +98,115 @@ namespace ConversionOptimizer
 
         private void MacroDetector(string currLine)
         {
-            if (currLine.Contains("!include"))
-            {
                 const string root = @"C:\Projects\FitNesseRoot\";
                 /*
                  char[] splitter = { ' ' };
                  string[] macroDetected = currLine.Split(splitter);
                  */
 
+
+
+            if (currLine.Contains("<"))
+            {
+                string[] buildnewpath = FitnessePath.Split('.');
+                
+
                 currLine = Regex.Match(currLine, @"([\w]+[\.]+)+(\w)+").ToString();
 
-                currLine.Trim();
+                string[] goUp = currLine.Split('.');
+
+               // currLine = buildnewpath[0] + "." + currLine;
+
+                DirectoryInfo hunt = new DirectoryInfo(FullPath.Replace("\\content.txt", ""));
+
+                bool found = false;
+
+                do
+                {
+                    DirectoryInfo[] directorylist = hunt.GetDirectories();
+
+                    
+
+                    foreach (DirectoryInfo directoryInfo in directorylist)
+                    {
+                        if (directoryInfo.Name.Equals(goUp[0]))
+                        {
+                            currLine = hunt.FullName + "." + currLine;
+
+                            currLine = currLine.Replace("C:\\Projects\\FitNesseRoot\\", "").Replace("\\", ".");
+
+                            currLine.Trim();
+
+                            found = true;
+                        }
+                    }
 
 
-                string macro = root + currLine.Replace('.', '\\');
+                    hunt = hunt.Parent;
+
+                } while (!found);
+            }
+
+            else if(!currLine.Contains("."))
+            {
+                string pathIt;
+
+                if (currLine.Contains(">"))
+                {
+                    pathIt = Regex.Match(currLine, @"[\>][\w]+").ToString().Replace(">", "");
+
+                    currLine = FitnessePath + "." + pathIt;
+                }
+                else if (currLine.Contains("^"))
+                {
+                    pathIt = Regex.Match(currLine, @"[\^][\w]+").ToString().Replace("^", "");
+
+                    string[] buildnewpath = FitnessePath.Split('.');
+
+                    buildnewpath[buildnewpath.Length - 1] = pathIt;
+
+                    currLine = "";
+
+                    foreach (string s in buildnewpath)
+                    {
+                        if (currLine.Equals(""))
+                            currLine = s;
+                        else
+                            currLine = currLine + "." + s;
+                    }
+                }
+                else
+                {
+                    pathIt = currLine.Replace("!include", "").Replace("-c", "").Replace("-C", "").Replace("-seamless", "").Trim();
+
+                    string[] buildnewpath = FitnessePath.Split('.');
+
+                    buildnewpath[buildnewpath.Length - 1] = pathIt;
+
+                    currLine = "";
+
+                    foreach (string s in buildnewpath)
+                    {
+                        if (currLine.Equals(""))
+                            currLine = s;
+                        else
+                            currLine = currLine + "." + s;
+                    }
+                    currLine.Trim(); //comment out when certain it works.
+                }
+
+                //currLine = FitnessePath + "\\" + pathIt;
+            }
+            else
+            {
+                currLine = Regex.Match(currLine, @"([\w]+[\.]+)+(\w)+").ToString();
+
+                
+            }
+
+            currLine.Trim();
+
+            string macro = root + currLine.Replace('.', '\\');
 
                 if (Program.MacroList.ContainsKey(currLine))
                 {
@@ -132,12 +228,16 @@ namespace ConversionOptimizer
                     return;
                 }
 
+
+                if (currLine.Contains("SetSsnAndAssertErrorMessage.SetSsnAndAssertErrorMessage"))
+                    currLine.Trim();
+
                 Test newmacro = new Test(currLine, null, "Macro");
 
                 NumLines += newmacro.NumLines;
 
                 Program.MacroList.Add(currLine, newmacro);
-            }
+            
         }
 
         #endregion
