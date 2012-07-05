@@ -8,13 +8,13 @@ namespace ConversionOptimizer
     class Metrics
     {
         public static int notStarted,
-                    inProgress,
-                    onHold,
-                    onHoldException,
-                    waitingForReview,
-                    finished,
-                    totalTests,
-                    totalMacros;
+                          inProgress,
+                          onHold,
+                          onHoldException,
+                          waitingForReview,
+                          finished,
+                          totalTests,
+                          totalMacros;
         
 
         public Metrics(int tests, int macros)

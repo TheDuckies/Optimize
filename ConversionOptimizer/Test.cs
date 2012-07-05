@@ -13,6 +13,7 @@ namespace ConversionOptimizer
         public string FullPath;
         public int NumLines;
         public string Status;
+        public string Author, Notes;
 
         public Test(string path, List<string> exceptions, string inputStatus)
         {
@@ -44,7 +45,7 @@ namespace ConversionOptimizer
                     if (currLine.Contains("!include"))
                         MacroDetector(currLine);
 
-                    if(!Status.Equals("Finished") && !Status.Equals("Waiting for Review"))
+                    if(!Status.Equals("Finished") && !Status.Equals("Waiting for Review") && !Status.Equals("Not to be Converted"))
                         ExceptionDetector(currLine, exceptions);
                 }
             }
@@ -200,24 +201,19 @@ namespace ConversionOptimizer
             else
             {
                 currLine = Regex.Match(currLine, @"([\w]+[\.]+)+(\w)+").ToString();
-
-                
+                currLine.Trim();
             }
-
-            currLine.Trim();
-
+          
             string macro = root + currLine.Replace('.', '\\');
+
+            Test output;
 
                 if (Program.MacroList.ContainsKey(currLine))
                 {
-                    Test output;
                     Program.MacroList.TryGetValue(currLine, out output);
-                    NumLines += output.NumLines;
-                    return;
                 }
-                if (Program.TestList.ContainsKey(currLine))
+                else if (Program.TestList.ContainsKey(currLine))
                 {
-                    Test output;
                     Program.TestList.TryGetValue(currLine, out output);
 
                     Program.TestList.Remove(currLine);
@@ -225,19 +221,14 @@ namespace ConversionOptimizer
                     output.Status = "Macro";
 
                     Program.MacroList.Add(currLine, output);
-                    return;
+                }
+                else
+                { 
+                    output = new Test(currLine, null, "Macro");
+                    Program.MacroList.Add(currLine, output);
                 }
 
-
-                if (currLine.Contains("SetSsnAndAssertErrorMessage.SetSsnAndAssertErrorMessage"))
-                    currLine.Trim();
-
-                Test newmacro = new Test(currLine, null, "Macro");
-
-                NumLines += newmacro.NumLines;
-
-                Program.MacroList.Add(currLine, newmacro);
-            
+                NumLines += output.NumLines;
         }
 
         #endregion
@@ -262,9 +253,9 @@ namespace ConversionOptimizer
             switch (Status)
             {
                 case "Not Started":
-                    return 0;
-                case "In Progress":
                     return 1;
+                case "In Progress":
+                    return 0;
                 case "On Hold":
                     return 2;
                 case "Waiting for Review":

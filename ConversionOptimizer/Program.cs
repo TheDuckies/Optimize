@@ -28,7 +28,7 @@ namespace ConversionOptimizer
             OpenFileDialog readFile = new OpenFileDialog();
             readFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             readFile.InitialDirectory = @"C:\Projects\Optimize\FitNesseList\";
-            readFile.Title = "Select a tab-delimited source file";
+            readFile.Title = "Select a tab- or comma- delimited source file";
 
             DialogResult result = readFile.ShowDialog();
 
@@ -70,6 +70,10 @@ namespace ConversionOptimizer
 
         /*
          * TODO
+         * Bug hunt for i/o RE: Author & Notes, Ignore Metrics
+         * Convert to CSV format.
+         * Verify read-in of CSV
+         * Not to be Converted Metric
          * 
          */
 
@@ -84,14 +88,20 @@ namespace ConversionOptimizer
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.Contains("Total number of") || line.Contains("Path	Lines	Status") || line.Equals(""))
+                    if (line.Contains("%") || line.ToUpper().Contains("NUMBER OF") || line.Contains("Path	Lines	Status") || line.Equals("") || line.Contains("Path,"))
                         continue;
 
-                    char[] toRemove = {'\t'};
+                    char[] toRemove = {'\t', ','};
 
                     string[] testline = line.Split(toRemove, StringSplitOptions.RemoveEmptyEntries);
 
-                    Test newTest = new Test(testline[0], exceptionList, testline[testline.Length -1]);
+                    Test newTest = new Test(testline[0], exceptionList, testline[2]);
+
+                    if(testline.Length > 3)
+                    newTest.Author = testline[3];
+
+                    if (testline.Length > 4)
+                    newTest.Notes = testline[4];
 
                     if (newTest.Status == null)
                         if (testline[1].Equals(newTest.NumLines.ToString()))
@@ -117,11 +127,9 @@ namespace ConversionOptimizer
 
                 string fileName = sortedTests[0].FitnessePath.Split('.')[0];
 
-                StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".TSV");
+                StreamWriter spreadsheetoutput = new StreamWriter(fileName + ".CSV");
 
-                string[] statii = {"Not Started", "In Progress", "On Hold", "Waiting for Review", "Finished"};
-
-                countStatus(TestList.Values, statii);
+                countStatus(TestList.Values);
 
                 spreadsheetoutput.WriteLine("Total number of Tests: " + Metrics.totalTests);
                 spreadsheetoutput.WriteLine("Total number of Macros: " + Metrics.totalMacros);
@@ -129,30 +137,29 @@ namespace ConversionOptimizer
                 spreadsheetoutput.WriteLine("Total number of Tests in progress: " + Metrics.inProgress);
                 spreadsheetoutput.WriteLine("Total number of Tests on hold (generic): " + Metrics.onHold);
                 spreadsheetoutput.WriteLine("Total number of Tests on hold (exception list generated): " + Metrics.onHoldException);
-                spreadsheetoutput.WriteLine("Total number of Tests on hold (inclusive) (as a percentage): " + ((float)(Metrics.onHold+Metrics.onHoldException) / (float)Metrics.totalTests) + @"%");
+                spreadsheetoutput.WriteLine("Total number of Tests on hold (inclusive) (as a percentage): " + ((float)(Metrics.onHold+Metrics.onHoldException) * 100 / (float)Metrics.totalTests) + @"%");
                 spreadsheetoutput.WriteLine("Total number of Tests waiting for review: " + Metrics.waitingForReview);
                 spreadsheetoutput.WriteLine("Total number of Tests finished: " + Metrics.finished);
-                spreadsheetoutput.WriteLine("Total number of Tests finished (as a percentage): " + ((float)Metrics.finished/(float)Metrics.totalTests) + @"%");
+                spreadsheetoutput.WriteLine("Total number of Tests finished (as a percentage): " + ((float)Metrics.finished * 100 /(float)Metrics.totalTests) + @"%");
 
-                spreadsheetoutput.WriteLine("Path" + '\t' + "Lines" + '\t' + "Status");
+                spreadsheetoutput.WriteLine("Path" + ',' + "Lines" + ',' + "Status");
 
                 foreach (Test test in sortedTests)
-                    spreadsheetoutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t' + test.Status);
+                    spreadsheetoutput.WriteLine(test.FitnessePath + ',' + test.NumLines + ',' + test.Status + ',' + test.Author + ',' + test.Notes);
                 spreadsheetoutput.Close();
 
-                StreamWriter macroutput = new StreamWriter(fileName + "MACROS.TSV", false);
+                StreamWriter macroutput = new StreamWriter(fileName + "MACROS.CSV", false);
 
                 foreach (Test test in sortedMacros)
                 {
-                    macroutput.WriteLine(test.FitnessePath + '\t' + test.NumLines + '\t');
+                    macroutput.WriteLine(test.FitnessePath + ',' + test.NumLines + ',');
                 }
 
                 macroutput.Close();
             }
-
         }
 
-        private static void countStatus (Dictionary<string, Test>.ValueCollection valueCollection, string[] statii)
+        private static void countStatus (Dictionary<string, Test>.ValueCollection valueCollection)
         {
             foreach (Test test in valueCollection)
             {
@@ -169,6 +176,15 @@ namespace ConversionOptimizer
                         break;
                     case "Finished":
                         Metrics.finished++;
+                        break;
+                    case "Not to be Converted":
+                        Metrics.totalTests--;
+                        break;
+                    case "Test Directory Not Found":
+                        Metrics.totalTests--;
+                        break;
+                    case "In Progress":
+                        Metrics.inProgress++;
                         break;
                     default:
                         Metrics.onHoldException++;
